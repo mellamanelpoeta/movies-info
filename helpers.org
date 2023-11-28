@@ -1,5 +1,5 @@
 Para usar la librería en Python de Cassandra se ocupa la siguiente línea de comando:
 
-#start_source
+#+begin_src shell
 conda install -c conda-forge cassandra-driver
-#end_source
+#+end_src
