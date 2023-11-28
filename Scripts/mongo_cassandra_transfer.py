@@ -12,4 +12,11 @@ coleccion = db["personajes"]
 
 # Conexión a Cassandra
 cluster = Cluster(['localhost:9042'])
-cassandra_session = cluster.connect('tu_keyspace')
+cassandra_session = cluster.connect('tu_keyspace')#reemplazar por el keyspace en cassandra (tarea)
+
+# Obtener datos de MongoDB
+mongo_data = coleccion.find({})  # Ajustar la consulta
+
+# Cerrar conexiones
+cliente.close()
+cluster.shutdown()
