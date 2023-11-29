@@ -1,0 +1,3 @@
+requests
+pymongo
+-c conda-forge cassandra-driver
