@@ -27,6 +27,6 @@ for numero_personaje in range(1, 7438):
             coleccion.insert_one(datos_personaje)
             print(f"Guardado personaje #{numero_personaje}: ",name)
     else:
-        print(f"No se pudo obtener el Pokémon #{numero_personaje}")
+        print(f"No se pudo obtener el personaje #{numero_personaje}")
 
 cliente.close()
