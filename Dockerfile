@@ -1,5 +1,12 @@
-FROM python:latest
-WORKDIR /Scripts
-COPY requirements.txt requirements.txt
+FROM python:3.9.18-slim
+
+WORKDIR /app
+
+COPY Scripts /app/Scripts
+
+WORKDIR /app/Scripts
+
+COPY requirements.txt /app/Scripts/
 RUN pip install -r requirements.txt
-EXPOSE 5000
+
+CMD ["python", "main.py"]
