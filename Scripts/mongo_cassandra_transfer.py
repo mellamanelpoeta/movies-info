@@ -113,7 +113,7 @@ def insert_movies(data):
 cursor_movies = movies_collection.find({})
 cursor_credits = credits_collection.find({})
 
-#insert_movies(cursor_movies)
+insert_movies(cursor_movies)
 insert_movie_cast(cursor_credits)
 
 
