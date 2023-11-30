@@ -1,0 +1,4 @@
+#Consultas en mongo
+
+#Cuenta la cantidad de elementos en la coleccion 'movies':
+db.movies.countDocuments()
