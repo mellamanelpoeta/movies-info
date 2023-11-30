@@ -1,0 +1,19 @@
+#Consultas en Cassandra
+
+#Consulta para saber información acerca de las películas que se estrenaron en el año 2019
+SELECT title, popularity, budget, revenue FROM movies WHERE release_date >= '2019-01-01' AND release_date <= '2019-12-31' ALLOW FILTERING;
+
+#Consulta para saber información acerca de las películas que se estrenaron en el año 1995
+SELECT title, popularity, budget, revenue FROM movies WHERE release_date >= '1995-01-01' AND release_date <= '1995-12-31' ALLOW FILTERING;
+
+#Consulta para saber los géneros de las películas que se estrenaron en 1992 
+SELECT title, genres FROM movies WHERE release_date >= '1992-01-01' AND release_date <= '1992-12-31' ALLOW FILTERING;
+
+#Consulta para saber los géneros de las películas que se estrenaron en 2020
+SELECT title, genres FROM movies WHERE release_date >= '2020-01-01' AND release_date <= '2020-12-31' ALLOW FILTERING;
+
+#Consulta para saber cuántas personas participaron en la producción de Goodfellas
+SELECT movie_id, COUNT(*) as num_personas_cast FROM movie_cast WHERE movie_id = 769 ALLOW FILTERING;
+
+#Se comprueba que el movie_id es el de Goodgellas
+SELECT title, production_companies, release_date FROM movies WHERE movie_id = 769;
