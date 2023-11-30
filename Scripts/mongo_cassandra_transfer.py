@@ -1,33 +1,33 @@
-from cassandra.cluster import Cluster
 from pymongo import MongoClient
+from cassandra.cluster import Cluster
 
-#Conexion a MongoDB
+
+
+#Conection to MongoDB
 client = MongoClient("mongodb://localhost:27017/")
 db = client["moviesdb"]
 movies_collection = db["movies"]
 credits_collection = db["credits"]
 
-# Conexión a Cassandra
+#Conection to Cassandra
 cluster = Cluster(['127.0.0.1'])
 session = cluster.connect()
 
-#Seleccionas el keyspace
+#Creation of keyspace
 keyspace_name = "mov"
 
-#Verificar si el keyspace ya existe
 existing_keyspaces = cluster.metadata.keyspaces
 if keyspace_name not in existing_keyspaces:
-    #Crear keyspace en caso de que no exista
     session.execute(f"CREATE KEYSPACE {keyspace_name} WITH replication = {{ 'class': 'SimpleStrategy', 'replication_factor': 1 }};")
 
-#Conectar al keyspace recien creado o ya existente
+#Connect to keyspace
 session.set_keyspace(keyspace_name)
 
-#Elimar tablas existentes (si las hay)
+#Eliminate tables if they exist
 session.execute("DROP TABLE IF EXISTS movie_cast")
 session.execute("DROP TABLE IF EXISTS movies")
 
-#Se crean las tablas
+#Table creation
 create_movie_cast_query = """
     CREATE TABLE IF NOT EXISTS movie_cast (
         movie_id INT,
@@ -63,7 +63,7 @@ create_movies_query = """
 session.execute(create_movie_cast_query)
 session.execute(create_movies_query)
 
-#Funcion para insertar datos en la tabla movie_cast
+#Function to insert data in movie_cast table
 def insert_movie_cast(data):
     query = """
         INSERT INTO movie_cast (movie_id, cast_id, gender, name, character, popularity, known_for_department)
@@ -86,7 +86,7 @@ def insert_movie_cast(data):
             ))
     return
 
-#Funcion para insertar datos en la tabla movies
+#Funcion to insert data in movies table
 def insert_movies(data):
     query = """
         INSERT INTO movies (movie_id, title, release_date, genres, popularity, budget, revenue, runtime, original_language, production_companies, production_countries, spoken_languages)
@@ -119,7 +119,7 @@ def insert_movies(data):
             print(f"Error inserting entry: {entry}, Error: {str(e)}")
     return
 
-#Insertar datos desde Mongo a Cassandra
+#Insert data from MongoDB to Cassandra
 cursor_movies = movies_collection.find({})
 cursor_credits = credits_collection.find({})
 
@@ -127,7 +127,7 @@ insert_movies(cursor_movies)
 insert_movie_cast(cursor_credits)
 
 
-# Cerrar conexiones
+# Close conections
 client.close()
 cluster.shutdown()
 session.shutdown()

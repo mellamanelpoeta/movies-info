@@ -1,61 +1,51 @@
-#gguerr21@itam.mx
 import pandas as pd
-from py2neo import Graph, Node, Relationship
+from neo4j import GraphDatabase
 from pymongo import MongoClient
 
-# Configuración de MongoDB
-mongo_client = MongoClient("mongodb://localhost:27017/")
-mongo_db = mongo_client["nombre_de_tu_base_de_datos"]
-mongo_collection = mongo_db["nombre_de_tu_coleccion"]
 
-# Configuración de Neo4j
-neo4j_uri = "bolt://localhost:7687"
-neo4j_user = "neo4j"
-neo4j_password = "neo4j"
+mongo_uri = "mongodb://localhost:27017/"  # Cambia esto según tu configuración
+mongo_client = MongoClient(mongo_uri)
+mongo_db = mongo_client["moviesdb"]
+mongo_collection = mongo_db["movies"]
 
-# Configuración de conexión a Neo4j
-graph = Graph(neo4j_uri, auth=(neo4j_user, neo4j_password))
+#Get data from mongo
+cursor = mongo_collection.find()
+df = pd.DataFrame(list(cursor))
 
-import pandas as pd
-from pymongo import MongoClient
-
-# Configuración de MongoDB
-mongo_client = MongoClient("mongodb://localhost:27017/")
-mongo_db = mongo_client["nombre_de_tu_base_de_datos"]
-mongo_collection = mongo_db["nombre_de_tu_coleccion"]
-
-def obtener_datos_desde_mongo_a_dataframe():
-    cursor = mongo_collection.find()
-
-    # Crea un DataFrame a partir de los documentos
-    dataframe = pd.DataFrame(list(cursor))
-
-    return dataframe
-
-if __name__ == "__main__":
-    # Obtiene los datos desde MongoDB a un DataFrame de pandas
-    df = obtener_datos_desde_mongo_a_dataframe()
-
-    # Puedes realizar más procesamiento o análisis con el DataFrame aquí
-    # ...
-
-    # Muestra el DataFrame
-    print(df)
+#title,genre, release_date df
+df.drop(columns=['_id','adult', 'backdrop_path', 'belongs_to_collection', 'budget', 'homepage','status', 
+                        'tagline', 'video', 'vote_average', 'vote_count','imdb_id', 'original_language', 'original_title',
+                        'overview', 'popularity', 'poster_path', 'revenue'], inplace=True)
+df_normalized = df.explode('genres')
+df_normalized['genres'] = df_normalized['genres'].apply(lambda x: x['name'] if isinstance(x, dict) else None)
+df_genero = df_normalized[['id','genres','title','release_date']]
+df_genero['release_date'] = pd.to_datetime(df_genero['release_date'], format='%Y-%m-%d', errors='coerce')
 
 
-def cargar_datos_desde_dataframe_a_neo4j(dataframe):
-    for index, row in dataframe.iterrows():
-        # Crea nodos y relaciones en Neo4j según tu lógica
-        # Ejemplo:
-        pelicula = Node("Pelicula", titulo=row["titulo"])
-        actor = Node("Actor", nombre=row["actor"])
-        relacion = Relationship(actor, "ACTUO_EN", pelicula)
-        graph.create(relacion)
+uri = "bolt://localhost:7687"  
 
-if __name__ == "__main__":
-    # Lee tus datos desde MongoDB a un DataFrame de pandas
-    # Puedes usar pd.read_json o pd.read_csv según el formato de tus datos
-    dataframe = pd.read_json("datos.json")
+# Load1
+def load1(tx, movie_id, genre, title, release_date):
+    year = release_date.year
 
-    # Carga los datos en Neo4j
-    cargar_datos_desde_dataframe_a_neo4j(dataframe)
+    # Create nodes
+    tx.run("""
+        MERGE (g:Genre {name: $genre})
+        MERGE (m:Movie {id: $id, title: $title})
+        MERGE (y:Year {value: $year})
+    """, genre=genre, id=movie_id, title=title, year=year)
+
+    # Crea las relaciones ENTRE entre género, película y año
+    tx.run("""
+        MATCH (g:Genre {name: $genre})
+        MATCH (m:Movie {id: $id})
+        MATCH (y:Year {value: $year})
+        MERGE (m)-[:IS_GENRE_OF]->(g)
+        MERGE (m)-[:RELEASED_IN]->(y)
+    """, genre=genre, id=movie_id, year=year)
+
+# Load to neo4j
+with GraphDatabase.driver(uri,auth=('neo4j', 'neoneo4j')) as driver:
+    with driver.session() as session:
+        for index, row in df_genero.iterrows():
+            session.write_transaction(load1, row['id'], row['genres'], row['title'], row['release_date'])

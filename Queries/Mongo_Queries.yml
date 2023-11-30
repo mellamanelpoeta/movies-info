@@ -1,4 +1,20 @@
 #Consultas en mongo
 
-#Cuenta la cantidad de elementos en la coleccion 'movies':
-db.movies.countDocuments()
+#Encontrar el título y año de las películas del género "Comedy" usando la coleccion movies (movies.json):
+db.movies.find({ genres: { $elemMatch: { name: "Comedy" } } }, { title: 1, release_date: { $year: "$release_date" }, _id: 0 })
+
+#Regresa el nombre de top 10 directores con mas peliculas:
+db.credits.aggregate([
+  { $unwind: "$crew" },
+  { $match: { "crew.job": "Director" } },
+  { $group: { _id: "$crew.name", count: { $sum: 1 } } },
+  { $sort: { count: -1 } },
+  { $limit: 10 }
+])
+
+#Regresa el nombre de las peliculas más caras de cada año, ordenadas de forma descendente:
+db.movies.aggregate([
+  { $sort: { budget: -1 } },
+  { $group: { _id: { $year: "$release_date" }, title: { $first: "$title" } } },
+  { $sort: { _id: -1 } }
+])
