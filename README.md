@@ -14,6 +14,9 @@ A lo largo de este documento se explicará la API que se escogió, cómo funcion
 Además de ser un sitio web para consumidores, TMDb proporciona una API que permite a los desarrolladores acceder a su vasta base de datos para crear aplicaciones, sitios web y servicios relacionados con el entretenimiento.
 Para poder acceder a la API se necesita registrar en la plataforma, obteniendo una llave o token. La llave se obtiene de manera gratuita, previa autorización de la plataforma. La documentación de la API tambiémn se puede revisar en el link a su sitio, accediendo a MORE -> API.
 
+![image](https://github.com/Thiago-whatever/ProyectoFinal_NoSQL/assets/85588937/269105d2-5330-47eb-8671-2623f43b1703)
+
+
 ## Inicialización del proyecto
 Para que se pueda correr este proyecto en cualquier computadora se deberá tener instalado previamente [Docker](https://www.docker.com/get-started/) y se deberán seguir las siguientes instrucciones:
 + Clonar este repositorio;
@@ -152,9 +155,93 @@ create_movies_query = """
     )
 """
 ```
+Finalmente con ayuda de un cursor, se extrae la información de MongoDB, se hace la transformación (tomamos las partes de los documentos json que queremos) y cargamos nuestras tablas en Cassandra. El siguiente fragmento de código, hace esto:
 
+```python
+#Funcion to insert data in movies table
+def insert_movies(data):
+    query = """
+        INSERT INTO movies (movie_id, title, release_date, genres, popularity, budget, revenue, runtime, original_language, production_companies, production_countries, spoken_languages)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    prepared = session.prepare(query)
+    for entry in data:
+        try:
+            # Establecer valores predeterminados si no existen datos en algunos campos
+            production_companies = entry.get('production_companies', [])
+            production_countries = entry.get('production_countries', [])
+            spoken_languages = entry.get('spoken_languages', [])
+            genres = entry.get('genres', [])
 
+            session.execute(prepared, (
+                entry['id'],
+                entry['title'],
+                entry['release_date'],
+                set([genre['name'] for genre in genres]),
+                entry['popularity'],
+                entry['budget'],
+                entry['revenue'],
+                entry['runtime'],
+                entry['original_language'],
+                set([company['name'] for company in production_companies]),
+                set([country['name'] for country in production_countries]),
+                set([language['name'] for language in spoken_languages])
+            ))
+        except Exception as e:
+            print(f"Error inserting entry: {entry}, Error: {str(e)}")
+    return
+```
 
 ## Neo4j
+Para hacer el proceso de ETL de MongoDB a Neo4j, se involucraron varios pasos, los cuales veremos a continuación. Primero, se genera la conexión a ambas bases de datos. Para la transformación se saca toda la información de ambas colecciones con ayuda de un cursor, el cual será procesado con ayuda de la librería de pandas de python.
+
+```python
+#Get data from mongo
+cursor = mongo_collection.find()
+df = pd.DataFrame(list(cursor))
+```
+ El procesamiento para volver los datos del cursor un grafo se hace a continuación:
+
+ ```python
+#title,genre, release_date df
+df.drop(columns=['_id','adult', 'backdrop_path', 'belongs_to_collection', 'budget', 'homepage','status', 
+                        'tagline', 'video', 'vote_average', 'vote_count','imdb_id', 'original_language', 'original_title',
+                        'overview', 'popularity', 'poster_path', 'revenue'], inplace=True)
+df_normalized = df.explode('genres')
+df_normalized['genres'] = df_normalized['genres'].apply(lambda x: x['name'] if isinstance(x, dict) else None)
+df_genero = df_normalized[['id','genres','title','release_date']]
+df_genero['release_date'] = pd.to_datetime(df_genero['release_date'], format='%Y-%m-%d', errors='coerce')
+```
+Finalmente se genera el grafo y se sube a Neo4j
+```python
+# Load1
+def load1(tx, movie_id, genre, title, release_date):
+    year = release_date.year
+
+    # Create nodes
+    tx.run("""
+        MERGE (g:Genre {name: $genre})
+        MERGE (m:Movie {id: $id, title: $title})
+        MERGE (y:Year {value: $year})
+    """, genre=genre, id=movie_id, title=title, year=year)
+
+    # Crea las relaciones ENTRE entre género, película y año
+    tx.run("""
+        MATCH (g:Genre {name: $genre})
+        MATCH (m:Movie {id: $id})
+        MATCH (y:Year {value: $year})
+        MERGE (m)-[:IS_GENRE_OF]->(g)
+        MERGE (m)-[:RELEASED_IN]->(y)
+    """, genre=genre, id=movie_id, year=year)
+
+# Load to neo4j
+with GraphDatabase.driver(uri,auth=('neo4j', 'neoneo4j')) as driver:
+    with driver.session() as session:
+        for index, row in df_genero.iterrows():
+```
+
+
+
+# Disclaimer:
 
 "This applicacion uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB."
