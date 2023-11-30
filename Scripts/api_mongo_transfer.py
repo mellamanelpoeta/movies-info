@@ -29,8 +29,8 @@ def moviesId_per_year(year):
 
     list_id = []
 
-    #It gets the information of the top 100 movies of the year
-    for i in range(1,6):        
+    #It gets the information of the top 20 movies of the year
+    for i in range(1,2):        
         params ={
         "primary_release_year": f"{year}",
         "page": f"{i}",
