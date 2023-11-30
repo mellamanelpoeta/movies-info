@@ -1,5 +1,0 @@
-Ejemplo de Query en MongoDB para los personajes de Disney
-
-#+begin_src shell
-db.personajes.findOne()
-#+end_src

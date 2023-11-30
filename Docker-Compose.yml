@@ -1,29 +1,29 @@
-version: '3.4'
+version: '3.8'
 
 services:
-
   mongo:
     image: 'mongo'
     ports:
       - 27017:27017
-
+    container_name: mongo
   cassandra:
-    image: 'cassandra'
+    image: 'cassandra:latest'
     ports:
       - 9042:9042
+    container_name: cassandra
 
   neo4j:
     image: 'neo4j'
     ports:
       - 7474:7474
       - 7687:7687
-    environment:
-      - NEO4J_AUTH=none
+    container_name: neo4j
 
-  movies-app:
+  movies_app:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: "movies_app"
     depends_on:
       - mongo
       - cassandra
