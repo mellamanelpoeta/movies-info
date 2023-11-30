@@ -15,11 +15,11 @@ db = client["moviesdb"]
 movies_collection = db["movies"]
 credits_collection = db["credits"]
 
-#Funcion para insertar informacion (en documentos json) a MongoDB
+#Insert json data to MongoDB
 def insert_Mongo(collection, data):
     collection.insert_one(data)
 
-#Funcion para obtener informacion de peliculas de un año en particular
+#Get the movies id of the given year
 def moviesId_per_year(year):
     url = f"{base_url}/discover/movie"
     headers = {
@@ -50,12 +50,19 @@ def movie_details(list_id):
         "Authorization": f"Bearer {bearer_token}"
     }
    
+    total = len(list_id)
+    i = 0
+    print("Inserting Movies to mongoDB")
     for id in list_id:
         url = f"{base_url}/movie/{id}?language=en-US"
         response = requests.get(url, headers=headers)
         results = response.json()
         if results:
             insert_Mongo(movies_collection, results)
+        i += 1
+        print(str(round(i/total*100,2))+"%")
+    print("100%")
+    print("Done")
 
 
 
@@ -65,22 +72,34 @@ def movie_credits(list_id):
         "Authorization": f"Bearer {bearer_token}"
     }
 
+    total = len(list_id)
+    i = 0
+    print("Inserting Credits to mongoDB")
     for id in list_id:
         url = f"{base_url}/movie/{id}/credits?language=en-US"
         response = requests.get(url, headers=headers)
         results = response.json()
         if results:
             insert_Mongo(credits_collection, results)
+        i += 1
+        print(str(round(i/total*100,2))+"%")
+    print("100%")
+    print("Done")
 
 ids = []
 k = 0
+print("Getting movies id per year")
 for year in range(1990,2024):
     print(str(round(k/34*100,2))+"%")
     ids += moviesId_per_year(year)
     k += 1
+print("100%")
+print("Done")
 
 #Insert movies details to MongoDB in collection "movies", and credits in collection "credits"
 movie_details(ids)
 movie_credits(ids)
+
+db.movies.updateMany({}, [{ "$set": { "release_date": { "$toDate": "$release_date" } } }])
 
 client.close()
