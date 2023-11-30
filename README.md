@@ -82,7 +82,78 @@ Vale la pena que veamos cómo se ven los response de los dos distintos requests.
 "vote_average":8.466,
 "vote_count":11921}
 ```
+
+Una parte del response que obtuvimos para créditos (no se puede incluir todo pues el documento es demasiado largo, el cast es muy grande para cada película) se muestra a continuación:
+```json
+{
+  "id": 769,
+  "cast": [
+    {
+      "adult": false,
+      "gender": 2,
+      "id": 11477,
+      "known_for_department": "Acting",
+      "name": "Ray Liotta",
+      "original_name": "Ray Liotta",
+      "popularity": 33.296,
+      "profile_path": "/iXKotiB0Xe9iJLCBbjAedHPLb7p.jpg",
+      "cast_id": 17,
+      "character": "Henry Hill",
+      "credit_id": "52fe4274c3a36847f801fd1f",
+      "order": 0
+    }
+...
+```
+
 ## Cassandra
+Para hacer el proceso de ETL de MongoDB a Cassandra, se involucraron varios pasos, los cuales veremos a continuación.
+Además de hacer la conexión, se hace un find({}) para cada una de las colecciones que tenemos. Cabe mencionar que de manera previa, se define el keyspace en Cassandra para poder trabajar: "mov" es el keyspace que se usa, pero se checa que no exista ningún keyspace con ese nombre; en caso de que exista se usará dicho keyspace.
+```python
+#Creation of keyspace
+keyspace_name = "mov"
+
+existing_keyspaces = cluster.metadata.keyspaces
+if keyspace_name not in existing_keyspaces:
+    session.execute(f"CREATE KEYSPACE {keyspace_name} WITH replication = {{ 'class': 'SimpleStrategy', 'replication_factor': 1 }};")
+```
+
+Luego se generan las dos tablas sobre las cuales hacemos consultas:
+```python
+#Table creation
+create_movie_cast_query = """
+    CREATE TABLE IF NOT EXISTS movie_cast (
+        movie_id INT,
+        cast_id INT,
+        gender INT,
+        name TEXT,
+        character TEXT,
+        popularity FLOAT,
+        known_for_department TEXT,
+        PRIMARY KEY (movie_id, cast_id, name)
+    )
+"""
+
+
+create_movies_query = """
+    CREATE TABLE IF NOT EXISTS movies (
+        movie_id INT,
+        title TEXT,
+        release_date DATE,
+        genres SET<TEXT>,
+        popularity FLOAT,
+        budget FLOAT,
+        revenue FLOAT,
+        runtime INT,
+        original_language TEXT,
+        production_companies SET<TEXT>,
+        production_countries SET<TEXT>,
+        spoken_languages SET<TEXT>,
+        PRIMARY KEY (movie_id, popularity)
+    )
+"""
+```
+
+
 
 ## Neo4j
 
