@@ -1,10 +1,10 @@
 # ProyectoFinal_NoSQL
 Proyecto en el que se demuestra el entendimiento y capacidad de manejo de las diferentes bases de datos que vimos en el semestre, así como los conceptos relacionados con API’s, ETL’s, etc.
 El objetivo del proyecto es integrar los siguientes elementos:
-** Realizar solicitudes a una API de nuestra elección;
-** insertar las respuestas a las solicitudes a una base de datos en MongoDB, la cual funcionará como DataLake;
-** del DataLake se deberá poder hacer consultas y un proceso de extracción, transformación y carga a otras dos bases de datos: Cassandra y Neo4j;
-** incorporar todos los elementos dentro de un Docker-Compose.
+### Realizar solicitudes a una API de nuestra elección;
+### insertar las respuestas a las solicitudes a una base de datos en MongoDB, la cual funcionará como DataLake;
+### del DataLake se deberá poder hacer consultas y un proceso de extracción, transformación y carga a otras dos bases de datos: Cassandra y Neo4j;
+### incorporar todos los elementos dentro de un Docker-Compose.
 
 A lo largo de este documento se explicará la API que se escogió, cómo funciona el proyecto, los requisitos para su ejecución en cualquier entorno local y algunas consultas para cada una de las bases de datos, junto con la explicación de los resultados que arrojan. 
 
