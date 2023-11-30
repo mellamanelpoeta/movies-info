@@ -4,7 +4,7 @@ from pymongo import MongoClient
 import json
 
 
-mongo_uri = "mongodb://mongo:27017/"  # Cambia esto según tu configuración
+mongo_uri = "mongodb://localhost:27017/"  # Cambia esto según tu configuración
 mongo_client = MongoClient(mongo_uri)
 mongo_db = mongo_client["moviesdb"]
 mongo_collection = mongo_db["movies"]
@@ -25,7 +25,7 @@ df_genero = df_normalized[['id','genres','title','release_date']]
 df_genero['release_date'] = pd.to_datetime(df_genero['release_date'], format='%Y-%m-%d', errors='coerce')
 
 
-uri = "bolt://neo4j:7687"  
+uri = "bolt://localhost:7687"  
 
 # Load1
 def load1(tx, movie_id, genre, title, release_date):

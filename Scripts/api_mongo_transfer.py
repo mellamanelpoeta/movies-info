@@ -6,9 +6,9 @@ bearer_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNDRhZDQ3NTAyNTNiMGIxM2FmMjJjNjI
 base_url = "https://api.themoviedb.org/3"
 
 #MongoDB configuration
-client = MongoClient("mongodb://mongo:27017/")
+#client = MongoClient("mongodb://mongo:27017/")
 
-'''LOCAL client = MongoClient("mongodb://localhost:27017/")'''
+client = MongoClient("mongodb://localhost:27017/")
 #Database name: Movies
 #Collections: Movies, Credits
 db = client["moviesdb"]
@@ -51,8 +51,6 @@ def movie_details(list_id):
         "Authorization": f"Bearer {bearer_token}"
     }
    
-    total = len(list_id)
-    i = 0
     print("Inserting Movies to mongoDB")
     for id in list_id:
         url = f"{base_url}/movie/{id}?language=en-US"
@@ -60,10 +58,7 @@ def movie_details(list_id):
         results = response.json()
         if results:
             insert_Mongo(movies_collection, results)
-        i += 1
-        print(str(round(i/total*100,2))+"%")
-    print("100%")
-    print("Done")
+    print("Still running...")
 
 
 
@@ -73,8 +68,6 @@ def movie_credits(list_id):
         "Authorization": f"Bearer {bearer_token}"
     }
 
-    total = len(list_id)
-    i = 0
     print("Inserting Credits to mongoDB")
     for id in list_id:
         url = f"{base_url}/movie/{id}/credits?language=en-US"
@@ -82,25 +75,20 @@ def movie_credits(list_id):
         results = response.json()
         if results:
             insert_Mongo(credits_collection, results)
-        i += 1
-        print(str(round(i/total*100,2))+"%")
-    print("100%")
-    print("Done")
+
+    print("Still running...")
 
 ids = []
 k = 0
 print("Getting movies id per year")
 for year in range(1990,2024):
-    print(str(round(k/34*100,2))+"%")
     ids += moviesId_per_year(year)
-    k += 1
-print("100%")
 print("Done")
 
 #Insert movies details to MongoDB in collection "movies", and credits in collection "credits"
 movie_details(ids)
 movie_credits(ids)
 
-db.movies.updateMany({}, [{ "$set": { "release_date": { "$toDate": "$release_date" } } }])
+db.movies.update_many({}, [{ "$set": { "release_date": { "$toDate": "$release_date" } } }])
 
 client.close()

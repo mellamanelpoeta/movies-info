@@ -21,12 +21,12 @@ services:
     environment:
       - NEO4J_AUTH=none
 
-  movies_app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: "movies_app"
-    depends_on:
-      - mongo
-      - cassandra
-      - neo4j
+#  movies_app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: "movies_app"
+#    depends_on:
+#      - mongo
+#      - cassandra
+#      - neo4j

@@ -2,13 +2,14 @@ from pymongo import MongoClient
 from cassandra.cluster import Cluster
 
 #Conection to MongoDB
-client = MongoClient("mongodb://mongo:27017/")
+#client = MongoClient("mongodb://mongo:27017/")
+client = MongoClient("mongodb://localhost:27017/")
 db = client["moviesdb"]
 movies_collection = db["movies"]
 credits_collection = db["credits"]
 
 #Conection to Cassandra
-cluster = Cluster(['cassandra'])
+cluster = Cluster(['localhost'])
 session = cluster.connect()
 
 #Creation of keyspace
