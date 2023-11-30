@@ -1,0 +1,17 @@
+#Conocer la cantidad de películas por género:
+MATCH (g:Genre)<-[:IS_GENRE_OF]-(m:Movie)
+RETURN g.name, COUNT(m) as moviesCount
+ORDER BY moviesCount DESC
+
+
+#Encontrar películas con conexiones a múltiples géneros:
+MATCH (m:Movie)-[:IS_GENRE_OF]->(g:Genre)
+WITH m, COUNT(g) as genreCount
+WHERE genreCount > 1
+RETURN m.title, genreCount
+
+
+#Encontrar la película más popular de un gémnero en particular
+MATCH (g:Genre {name: 'NombreDelGénero'})<-[:IS_GENRE_OF]-(m:Movie)
+WITH m ORDER BY m.popularity DESC LIMIT 1
+RETURN m.title, m.popularity, g.name as Genre
