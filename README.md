@@ -23,10 +23,65 @@ Para que se pueda correr este proyecto en cualquier computadora se deberá tener
 + para confirmar que los contenedores se crearon y están corriendo se puede correr el siguiente comando en la terminal:
 ```shell
 docker ps
-'''
+```
+Los queries que se pueden hacer para las distintas bases de datos se deben correr en la terminal y se pueden encontrar en la carpeta [Queries](https://github.com/Thiago-whatever/ProyectoFinal_NoSQL/tree/main/Queries) de este repositorio.
 
 ## MongoDB
+Para pasar los datos de la API a MongoDB se elaboró un script de python. En este script se hace la conexión tanto a la API como a MongoDB. Ahora, como se encontró que con el url en terminación '/discover/movie' las respuestas a los requests no tenían suficiente información para la elaboración del proyecto, se usa ese request para conseguir los ids de las películas y hacer otro request a otro url. Se optó, para no poblar demás la base de datos, por escoger el top 20 de películas más populares de cada año (1990-2024)
 
+```python
+url = f"{base_url}/movie/{id}?language=en-US"
+        response = requests.get(url, headers=headers)
+        results = response.json()
+        if results:
+            insert_Mongo(movies_collection, results)
+
+```
+Se optó por tener dos colecciones: "movies" y "credits". Para hacer manejo de esto, se tiene un método distinto para descargar los datos correspondientes a credits, y se muestra a continuación:
+
+```python
+url = f"{base_url}/movie/{id}/credits?language=en-US"
+        response = requests.get(url, headers=headers)
+        results = response.json()
+        if results:
+            insert_Mongo(credits_collection, results)
+```
+
+Por último cabe destacar el método 'insert_Mongo' el cual nos ayudó a poblar las distintas colecciones con los distintos sets de datos: 
+```python
+def insert_Mongo(collection, data):
+    collection.insert_one(data)
+```
+
+Vale la pena que veamos cómo se ven los response de los dos distintos requests. Para el request de películas, con el cual poblamos la colección "movies" el response se veía de la siguiente forma: 
+
+```json
+{"_id":{"$oid":"656848b139c28fac6b06808b"},
+"adult":false,"backdrop_path":"/sw7mordbZxgITU877yTpZCud90M.jpg",
+"belongs_to_collection":null,
+"budget":25000000,
+"genres":[{"id":18,"name":"Drama"},{"id":80,"name":"Crime"}],
+"homepage":"http://www.warnerbros.com/goodfellas",
+"id":769,"imdb_id":"tt0099685",
+"original_language":"en",
+"original_title":"GoodFellas",
+"overview":"The true story of Henry Hill, a half-Irish, half-Sicilian Brooklyn kid who is adopted by neighbourhood gangsters at an early age and climbs the ranks of a Mafia family under the guidance of Jimmy Conway.",
+"popularity":85.372,
+"poster_path":"/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg",
+"production_companies":[{"id":8880,"logo_path":"/fE7LBw7Jz8R29EABFGCvWNriZxN.png","name":"Winkler Films",
+"origin_country":"US"}],
+"production_countries":[{"iso_3166_1":"US","name":"United States of America"}],
+"release_date":"1990-09-12",
+"revenue":46835000,
+"runtime":145,
+"spoken_languages":[{"english_name":"Italian","iso_639_1":"it","name":"Italiano"},{"english_name":"English","iso_639_1":"en","name":"English"}],
+"status":"Released",
+"tagline":"Three decades of life in the mafia.",
+"title":"GoodFellas",
+"video":false,
+"vote_average":8.466,
+"vote_count":11921}
+```
 ## Cassandra
 
 ## Neo4j
