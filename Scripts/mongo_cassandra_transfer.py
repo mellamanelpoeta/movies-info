@@ -13,6 +13,14 @@ session = cluster.connect()
 
 #Seleccionas el keyspace
 keyspace_name = "mov"
+
+#Verificar si el keyspace ya existe
+existing_keyspaces = cluster.metadata.keyspaces
+if keyspace_name not in existing_keyspaces:
+    #Crear keyspace en caso de que no exista
+    session.execute(f"CREATE KEYSPACE {keyspace_name} WITH replication = {{ 'class': 'SimpleStrategy', 'replication_factor': 1 }};")
+
+#Conectar al keyspace recien creado o ya existente
 session.set_keyspace(keyspace_name)
 
 #Elimar tablas existentes (si las hay)
@@ -29,13 +37,14 @@ create_movie_cast_query = """
         character TEXT,
         popularity FLOAT,
         known_for_department TEXT,
-        PRIMARY KEY (movie_id, cast_id)
+        PRIMARY KEY (movie_id, cast_id, name)
     )
 """
 
+
 create_movies_query = """
     CREATE TABLE IF NOT EXISTS movies (
-        movie_id INT PRIMARY KEY,
+        movie_id INT,
         title TEXT,
         release_date DATE,
         genres SET<TEXT>,
@@ -46,7 +55,8 @@ create_movies_query = """
         original_language TEXT,
         production_companies SET<TEXT>,
         production_countries SET<TEXT>,
-        spoken_languages SET<TEXT>
+        spoken_languages SET<TEXT>,
+        PRIMARY KEY (movie_id, popularity)
     )
 """
 
