@@ -22,7 +22,7 @@ Para que se pueda correr este proyecto en cualquier computadora se deberá tener
 + Clonar este repositorio;
 + asegurarse que el daemon de docker esté corriendo;
 + posicionarse en la carpeta del repositorio recién clonado y correr el archivo 'movie_app.ipynb';
-++ es en este archivo donde se hace el ejecuta el Docker-Compose, el cual carga los contenedores, hace la conexión con la API, te conecta con el resto de las bases de datos y hace los queries.
++ + es en este archivo donde se hace el ejecuta el Docker-Compose, el cual carga los contenedores, hace la conexión con la API, te conecta con el resto de las bases de datos y hace los queries.
 + como el proceso involucra descargar y procesar muchos datos de la API, así como transformarlos y cargarlos en MongoDB, Cassandra y Neo4j, se debe esperar alrededor de 5 minutos para que se garantice el correcto funcionamiento de todo el proyecto.
 Los queries que se pueden hacer para las distintas bases de datos se deben correr en la terminal y se pueden encontrar en la carpeta [Queries](https://github.com/Thiago-whatever/ProyectoFinal_NoSQL/tree/main/Queries) de este repositorio.
 
