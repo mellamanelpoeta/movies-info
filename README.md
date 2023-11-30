@@ -21,9 +21,9 @@ Para que se pueda correr este proyecto en cualquier computadora se deberá tener
 + posicionarse en la carpeta del repositorio recién clonado y correr el archivo run.sh en la terminal;
 + como el proceso involucra descargar y procesar muchos datos de la API, así como transformarlos y cargarlos en MongoDB, Cassandra y Neo4j, se debe esperar alrededor de 3 minutos para que se garantice el correcto funcionamiento de todo el proyecto.
 + para confirmar que los contenedores se crearon y están corriendo se puede correr el siguiente comando en la terminal:
-#+begin_src
+```shell
 docker ps
-#+end_src
+'''
 
 ## MongoDB
 
