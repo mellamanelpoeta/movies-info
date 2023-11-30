@@ -1,9 +1,10 @@
 import pandas as pd
 from neo4j import GraphDatabase
 from pymongo import MongoClient
+import json
 
 
-mongo_uri = "mongodb://localhost:27017/"  # Cambia esto según tu configuración
+mongo_uri = "mongodb://mongo:27017/"  # Cambia esto según tu configuración
 mongo_client = MongoClient(mongo_uri)
 mongo_db = mongo_client["moviesdb"]
 mongo_collection = mongo_db["movies"]
@@ -11,6 +12,8 @@ mongo_collection = mongo_db["movies"]
 #Get data from mongo
 cursor = mongo_collection.find()
 df = pd.DataFrame(list(cursor))
+
+'''LOCAL df = pd.read_json('movies.json')'''
 
 #title,genre, release_date df
 df.drop(columns=['_id','adult', 'backdrop_path', 'belongs_to_collection', 'budget', 'homepage','status', 
@@ -22,7 +25,7 @@ df_genero = df_normalized[['id','genres','title','release_date']]
 df_genero['release_date'] = pd.to_datetime(df_genero['release_date'], format='%Y-%m-%d', errors='coerce')
 
 
-uri = "bolt://localhost:7687"  
+uri = "bolt://neo4j:7687"  
 
 # Load1
 def load1(tx, movie_id, genre, title, release_date):

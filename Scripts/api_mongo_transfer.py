@@ -6,8 +6,9 @@ bearer_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNDRhZDQ3NTAyNTNiMGIxM2FmMjJjNjI
 base_url = "https://api.themoviedb.org/3"
 
 #MongoDB configuration
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient("mongodb://mongo:27017/")
 
+'''LOCAL client = MongoClient("mongodb://localhost:27017/")'''
 #Database name: Movies
 #Collections: Movies, Credits
 db = client["moviesdb"]

@@ -1,16 +1,14 @@
 from pymongo import MongoClient
 from cassandra.cluster import Cluster
 
-
-
 #Conection to MongoDB
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient("mongodb://mongo:27017/")
 db = client["moviesdb"]
 movies_collection = db["movies"]
 credits_collection = db["credits"]
 
 #Conection to Cassandra
-cluster = Cluster(['127.0.0.1'])
+cluster = Cluster(['cassandra'])
 session = cluster.connect()
 
 #Creation of keyspace
@@ -125,7 +123,6 @@ cursor_credits = credits_collection.find({})
 
 insert_movies(cursor_movies)
 insert_movie_cast(cursor_credits)
-
 
 # Close conections
 client.close()
