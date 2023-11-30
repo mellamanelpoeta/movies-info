@@ -14,6 +14,9 @@ A lo largo de este documento se explicará la API que se escogió, cómo funcion
 Además de ser un sitio web para consumidores, TMDb proporciona una API que permite a los desarrolladores acceder a su vasta base de datos para crear aplicaciones, sitios web y servicios relacionados con el entretenimiento.
 Para poder acceder a la API se necesita registrar en la plataforma, obteniendo una llave o token. La llave se obtiene de manera gratuita, previa autorización de la plataforma. La documentación de la API tambiémn se puede revisar en el link a su sitio, accediendo a MORE -> API.
 
+![image](https://github.com/Thiago-whatever/ProyectoFinal_NoSQL/assets/85588937/269105d2-5330-47eb-8671-2623f43b1703)
+
+
 ## Inicialización del proyecto
 Para que se pueda correr este proyecto en cualquier computadora se deberá tener instalado previamente [Docker](https://www.docker.com/get-started/) y se deberán seguir las siguientes instrucciones:
 + Clonar este repositorio;
