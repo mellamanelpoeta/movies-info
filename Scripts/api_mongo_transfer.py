@@ -2,7 +2,7 @@ import requests
 from pymongo import MongoClient
 
 #API configuration
-bearer_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjNDRhZDQ3NTAyNTNiMGIxM2FmMjJjNjIwNmE2MmNmMyIsInN1YiI6IjY1NjZhY2M1ZDk1NDIwMDExYjk1MmE1NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.N2gnv8B7AlaOmB_o4FXvv3T2saPCZU5dDFhs8i8IJJg"
+bearer_token = "-"
 base_url = "https://api.themoviedb.org/3"
 
 #MongoDB configuration
