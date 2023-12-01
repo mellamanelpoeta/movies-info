@@ -32,7 +32,8 @@ Para que se pueda correr este proyecto en cualquier computadora se deberá tener
 ```shell
 ./run.sh
 ```
-  + es en este archivo donde se ejecuta el Docker-Compose, el cual carga los contenedores, hace la conexión con la API, te conecta con el resto de las bases de datos y hace los queries.
+  + es en este archivo donde se ejecuta el Docker-Compose, el cual carga los contenedores y abre VSCode, en donde se tendrá que abrir el archivo movie_app.ipynb
+  + luego hay que ir corriendo el archivo y se podrán ir visualizando los resultados.
 + como el proceso involucra descargar y procesar muchos datos de la API, así como transformarlos y cargarlos en MongoDB, Cassandra y Neo4j, se debe esperar alrededor de 5 minutos para que se garantice el correcto funcionamiento de todo el proyecto.
 Los queries que se pueden hacer para las distintas bases de datos se deben correr en la terminal y se pueden encontrar en la carpeta [Queries](https://github.com/Thiago-whatever/ProyectoFinal_NoSQL/tree/main/Queries) de este repositorio.
 
