@@ -30,7 +30,7 @@ Para que se pueda correr este proyecto en cualquier computadora se deberá tener
 + asegurarse que el daemon de docker esté corriendo;
 + posicionarse en la carpeta del repositorio recién clonado y correr el archivo run de la siguiente manera en la terminal:
 ```shell
-./ run.sh
+./run.sh
 ```
   + es en este archivo donde se ejecuta el Docker-Compose, el cual carga los contenedores, hace la conexión con la API, te conecta con el resto de las bases de datos y hace los queries.
 + como el proceso involucra descargar y procesar muchos datos de la API, así como transformarlos y cargarlos en MongoDB, Cassandra y Neo4j, se debe esperar alrededor de 5 minutos para que se garantice el correcto funcionamiento de todo el proyecto.
