@@ -28,7 +28,7 @@ Para poder acceder a la API se necesita registrar en la plataforma, obteniendo u
 Para que se pueda correr este proyecto en cualquier computadora se deberá tener instalado previamente [Docker](https://www.docker.com/get-started/) y se deberán seguir las siguientes instrucciones:
 + Clonar este repositorio;
 + asegurarse que el daemon de docker esté corriendo;
-+ posicionarse en la carpeta del repositorio recién clonado y correr el archivo run de la siguiente manera:
++ posicionarse en la carpeta del repositorio recién clonado y correr el archivo run de la siguiente manera en la terminal:
 ```shell
 ./ run.sh
 ```
