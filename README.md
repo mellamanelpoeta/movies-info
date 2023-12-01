@@ -1,5 +1,12 @@
 # ProyectoFinal_NoSQL
 Proyecto en el que se demuestra el entendimiento y capacidad de manejo de las diferentes bases de datos que vimos en el semestre, así como los conceptos relacionados con API’s, ETL’s, etc.
+
+Integrantes del equipo:
+- Mariana Arroyo
+- Gerardo Guerrero
+- Santigo Flores
+
+
 El objetivo del proyecto es integrar los siguientes elementos:
 - Realizar solicitudes a una API de nuestra elección;
 - insertar las respuestas a las solicitudes a una base de datos en MongoDB, la cual funcionará como DataLake;
