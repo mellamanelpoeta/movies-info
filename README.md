@@ -1,44 +1,37 @@
-# ProyectoFinal_NoSQL
-Proyecto en el que se demuestra el entendimiento y capacidad de manejo de las diferentes bases de datos que vimos en el semestre, así como los conceptos relacionados con API’s, ETL’s, etc.
+The objective of the project is to integrate the following elements:
 
-Integrantes del equipo:
-- Mariana Arroyo
-- Gerardo Guerrero
-- Santigo Flores
++ Make requests to an API of our choice.
++ Insert the responses to the requests into a MongoDB database, which will function as a DataLake.
++ From the DataLake, it should be possible to make queries and perform an extraction, transformation, and loading process into two other databases: Cassandra and Neo4j.
++ Incorporate all elements within a Docker-Compose.
++ Throughout this document, the chosen API will be explained, how the project works, the requirements for its execution in any local environment, and some queries for each of the databases, along with 
+ an explanation of the results they yield."
+
+![image](https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_2-9665a76b1ae401a510ec1e0ca40ddcb3b0cfe45f1d51b77a308fea0845885648.svg)
+## About the API: TMDB - The Movie Database API
+
+[The Movie Database (TMDB)](https://www.themoviedb.org/) is an online database that contains a wide range of information about movies and TV shows. It provides details such as cast, production crew, release dates, synopses, ratings, user and critic scores, images, trailers, posters, and more. On the platform, users can contribute by adding information, correcting errors, or adding new content. This allows the database to stay up-to-date and accurate thanks to the participation of the user community. Additionally, users can rate movies and TV shows, helping to generate scores that reflect the overall community opinion about a particular title.
+
+In addition to being a consumer website, TMDb provides an API that allows developers to access its vast database to create applications, websites, and entertainment-related services. To access the API, registration on the platform is required, obtaining a key or token. The key is obtained for free, subject to platform authorization. The API documentation can also be reviewed on their site.
 
 
-El objetivo del proyecto es integrar los siguientes elementos:
-- Realizar solicitudes a una API de nuestra elección;
-- insertar las respuestas a las solicitudes a una base de datos en MongoDB, la cual funcionará como DataLake;
-- del DataLake se deberá poder hacer consultas y un proceso de extracción, transformación y carga a otras dos bases de datos: Cassandra y Neo4j;
-- incorporar todos los elementos dentro de un Docker-Compose.
-
-A lo largo de este documento se explicará la API que se escogió, cómo funciona el proyecto, los requisitos para su ejecución en cualquier entorno local y algunas consultas para cada una de las bases de datos, junto con la explicación de los resultados que arrojan. 
-
-## Acerca de la API: TMDB - The Movie Database API
-[The Movie Database (TMDB)](https://www.themoviedb.org/) es una base de datos en línea que contiene una amplia gama de información sobre películas y programas de televisión. Ofrece detalles como el elenco, equipo de producción, fechas de estreno, sinopsis, clasificaciones, puntuaciones de usuarios y críticos, imágenes, tráilers, posters y entre otros. En la plataforma, los usuarios pueden contribuir agregando información, corrigiendo errores o añadiendo contenido nuevo. Esto permite que la base de datos se mantenga actualizada y precisa gracias a la participación de la comunidad de usuarios. Adicionalmente, los usuarios pueden calificar películas y programas de televisión, lo que ayuda a generar puntuaciones que reflejan la opinión general de la comunidad sobre un título en particular.
-
-Además de ser un sitio web para consumidores, TMDb proporciona una API que permite a los desarrolladores acceder a su vasta base de datos para crear aplicaciones, sitios web y servicios relacionados con el entretenimiento.
-Para poder acceder a la API se necesita registrar en la plataforma, obteniendo una llave o token. La llave se obtiene de manera gratuita, previa autorización de la plataforma. La documentación de la API tambiémn se puede revisar en el link a su sitio, accediendo a MORE -> API.
-
-![image](https://github.com/Thiago-whatever/ProyectoFinal_NoSQL/assets/85588937/269105d2-5330-47eb-8671-2623f43b1703)
 
 
 ## Inicialización del proyecto
-Para que se pueda correr este proyecto en cualquier computadora se deberá tener instalado previamente [Docker](https://www.docker.com/get-started/) y se deberán seguir las siguientes instrucciones:
-+ Clonar este repositorio;
-+ asegurarse que el daemon de docker esté corriendo;
-+ posicionarse en la carpeta del repositorio recién clonado y correr el archivo run de la siguiente manera en la terminal:
+To run this project on any computer, [Docker](https://www.docker.com/get-started/) must be installed beforehand. Follow the instructions below:
++ Clone this repository.
++ Ensure that the Docker daemon is running.
++ Navigate to the cloned repository's folder and run the run.sh file in the terminal:
 ```shell
 ./run.sh
 ```
-  + es en este archivo donde se ejecuta el Docker-Compose, el cual carga los contenedores y abre VSCode, en donde se tendrá que abrir el archivo movie_app.ipynb
-  + luego hay que ir corriendo el archivo y se podrán ir visualizando los resultados.
-+ como el proceso involucra descargar y procesar muchos datos de la API, así como transformarlos y cargarlos en MongoDB, Cassandra y Neo4j, se debe esperar alrededor de 5 minutos para que se garantice el correcto funcionamiento de todo el proyecto.
-Los queries que se pueden hacer para las distintas bases de datos se deben correr en la terminal y se pueden encontrar en la carpeta [Queries](https://github.com/Thiago-whatever/ProyectoFinal_NoSQL/tree/main/Queries) de este repositorio.
+  + In this file, Docker-Compose is executed, which loads the containers and opens VSCode. Open the movie_app.ipynb file in VSCode.
+  + Run the notebook to visualize the results.
+
+Queries for different databases should be executed in the terminal and can be found in the [Queries](https://github.com/Thiago-whatever/ProyectoFinal_NoSQL/tree/main/Queries) folder of this repository.
 
 ## MongoDB
-Para pasar los datos de la API a MongoDB se elaboró un script de python. En este script se hace la conexión tanto a la API como a MongoDB. Ahora, como se encontró que con el url en terminación '/discover/movie' las respuestas a los requests no tenían suficiente información para la elaboración del proyecto, se usa ese request para conseguir los ids de las películas y hacer otro request a otro url. Se optó, para no poblar demás la base de datos, por escoger el top 20 de películas más populares de cada año (1990-2024)
+To transfer data from the API to MongoDB, a Python script was developed. This script establishes connections to both the API and MongoDB. However, it was found that requests with the URL ending in '/discover/movie' did not provide sufficient information for the project. Therefore, this request is used to obtain movie IDs, and another request is made to a different URL. To avoid unnecessarily populating the database, the decision was made to select the top 20 most popular movies for each year from 1990 to 2024.
 
 ```python
 url = f"{base_url}/movie/{id}?language=en-US"
@@ -48,7 +41,7 @@ url = f"{base_url}/movie/{id}?language=en-US"
             insert_Mongo(movies_collection, results)
 
 ```
-Se optó por tener dos colecciones: "movies" y "credits". Para hacer manejo de esto, se tiene un método distinto para descargar los datos correspondientes a credits, y se muestra a continuación:
+It was decided to have two collections: "movies" and "credits". To handle this, a different method is used to download the data corresponding to credits, and it is shown below:
 
 ```python
 url = f"{base_url}/movie/{id}/credits?language=en-US"
@@ -57,15 +50,13 @@ url = f"{base_url}/movie/{id}/credits?language=en-US"
         if results:
             insert_Mongo(credits_collection, results)
 ```
-
-Por último cabe destacar el método 'insert_Mongo' el cual nos ayudó a poblar las distintas colecciones con los distintos sets de datos: 
+Finally, it is worth highlighting the 'insert_Mongo' method, which helped populate the different collections with the various datasets:
 ```python
 def insert_Mongo(collection, data):
     collection.insert_one(data)
 ```
 
-Vale la pena que veamos cómo se ven los response de los dos distintos requests. Para el request de películas, con el cual poblamos la colección "movies" el response se veía de la siguiente forma: 
-
+For the movie request, which populates the "movies" collection, the response looked like the following:
 ```json
 {"_id":{"$oid":"656848b139c28fac6b06808b"},
 "adult":false,"backdrop_path":"/sw7mordbZxgITU877yTpZCud90M.jpg",
@@ -94,7 +85,7 @@ Vale la pena que veamos cómo se ven los response de los dos distintos requests.
 "vote_count":11921}
 ```
 
-Una parte del response que obtuvimos para créditos (no se puede incluir todo pues el documento es demasiado largo, el cast es muy grande para cada película) se muestra a continuación:
+A portion of the response we obtained for credits (the entire document is too long to include, and the cast is extensive for each movie) is shown below:
 ```json
 {
   "id": 769,
@@ -117,8 +108,8 @@ Una parte del response que obtuvimos para créditos (no se puede incluir todo pu
 ```
 
 ## Cassandra
-Para hacer el proceso de ETL de MongoDB a Cassandra, se involucraron varios pasos, los cuales veremos a continuación.
-Además de hacer la conexión, se hace un find({}) para cada una de las colecciones que tenemos. Cabe mencionar que de manera previa, se define el keyspace en Cassandra para poder trabajar: "mov" es el keyspace que se usa, pero se checa que no exista ningún keyspace con ese nombre; en caso de que exista se usará dicho keyspace.
+To perform the ETL process from MongoDB to Cassandra, several steps were involved, which we will see below.
+In addition to establishing the connection, a find({}) operation is performed for each of the collections we have. It's worth mentioning that, beforehand, the keyspace in Cassandra is defined for operational purposes: "mov" is the keyspace used, but it is verified that there is no existing keyspace with that name. In case such a keyspace exists, it will be utilized.
 ```python
 #Creation of keyspace
 keyspace_name = "mov"
@@ -128,7 +119,7 @@ if keyspace_name not in existing_keyspaces:
     session.execute(f"CREATE KEYSPACE {keyspace_name} WITH replication = {{ 'class': 'SimpleStrategy', 'replication_factor': 1 }};")
 ```
 
-Luego se generan las dos tablas sobre las cuales hacemos consultas:
+Next, the two tables are generated upon which we perform queries:
 ```python
 #Table creation
 create_movie_cast_query = """
@@ -163,7 +154,7 @@ create_movies_query = """
     )
 """
 ```
-Finalmente con ayuda de un cursor, se extrae la información de MongoDB, se hace la transformación (tomamos las partes de los documentos json que queremos) y cargamos nuestras tablas en Cassandra. El siguiente fragmento de código, hace esto:
+Finally, with the help of a cursor, the information is extracted from MongoDB, the transformation is carried out (we take the parts of the JSON documents that we want), and we load our tables into Cassandra. The following code snippet accomplishes this:
 
 ```python
 #Funcion to insert data in movies table
@@ -201,15 +192,14 @@ def insert_movies(data):
 ```
 
 ## Neo4j
-Para hacer el proceso de ETL de MongoDB a Neo4j, se involucraron varios pasos, los cuales veremos a continuación. Primero, se genera la conexión a ambas bases de datos. Para la transformación se saca toda la información de ambas colecciones con ayuda de un cursor, el cual será procesado con ayuda de la librería de pandas de python.
+To carry out the ETL process from MongoDB to Neo4j, several steps were involved, which we will see below. First, the connection to both databases is established. For the transformation, all the information from both collections is retrieved with the help of a cursor, which will be processed using the Python pandas library.
 
 ```python
 #Get data from mongo
 cursor = mongo_collection.find()
 df = pd.DataFrame(list(cursor))
 ```
- El procesamiento para volver los datos del cursor un grafo se hace a continuación:
-
+The processing to turn the cursor data into a graph is done as follows:
  ```python
 #title,genre, release_date df
 df.drop(columns=['_id','adult', 'backdrop_path', 'belongs_to_collection', 'budget', 'homepage','status', 
@@ -220,7 +210,7 @@ df_normalized['genres'] = df_normalized['genres'].apply(lambda x: x['name'] if i
 df_genero = df_normalized[['id','genres','title','release_date']]
 df_genero['release_date'] = pd.to_datetime(df_genero['release_date'], format='%Y-%m-%d', errors='coerce')
 ```
-Finalmente se genera el grafo y se sube a Neo4j
+We generate the graph at last and it is loaded to Neo4j
 ```python
 # Load1
 def load1(tx, movie_id, genre, title, release_date):
