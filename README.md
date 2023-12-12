@@ -5,7 +5,7 @@ The objective of the project is to integrate the following elements:
 + From the DataLake, it should be possible to make queries and perform an extraction, transformation, and loading process into two other databases: Cassandra and Neo4j.
 + Incorporate all elements within a Docker-Compose.
 + Throughout this document, the chosen API will be explained, how the project works, the requirements for its execution in any local environment, and some queries for each of the databases, along with 
- an explanation of the results they yield."
+ an explanation of the results they yield.
 
 ![image](https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_2-9665a76b1ae401a510ec1e0ca40ddcb3b0cfe45f1d51b77a308fea0845885648.svg)
 ## About the API: TMDB - The Movie Database API
