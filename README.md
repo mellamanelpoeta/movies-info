@@ -1,19 +1,11 @@
-# ProyectoFinal_NoSQL
-Proyecto en el que se demuestra el entendimiento y capacidad de manejo de las diferentes bases de datos que vimos en el semestre, así como los conceptos relacionados con API’s, ETL’s, etc.
+The objective of the project is to integrate the following elements:
 
-Integrantes del equipo:
-- Mariana Arroyo
-- Gerardo Guerrero
-- Santigo Flores
-
-
-El objetivo del proyecto es integrar los siguientes elementos:
-- Realizar solicitudes a una API de nuestra elección;
-- insertar las respuestas a las solicitudes a una base de datos en MongoDB, la cual funcionará como DataLake;
-- del DataLake se deberá poder hacer consultas y un proceso de extracción, transformación y carga a otras dos bases de datos: Cassandra y Neo4j;
-- incorporar todos los elementos dentro de un Docker-Compose.
-
-A lo largo de este documento se explicará la API que se escogió, cómo funciona el proyecto, los requisitos para su ejecución en cualquier entorno local y algunas consultas para cada una de las bases de datos, junto con la explicación de los resultados que arrojan. 
++ Make requests to an API of our choice.
++ Insert the responses to the requests into a MongoDB database, which will function as a DataLake.
++ From the DataLake, it should be possible to make queries and perform an extraction, transformation, and loading process into two other databases: Cassandra and Neo4j.
++ Incorporate all elements within a Docker-Compose.
++ Throughout this document, the chosen API will be explained, how the project works, the requirements for its execution in any local environment, and some queries for each of the databases, along with 
+ an explanation of the results they yield."
 
 ## Acerca de la API: TMDB - The Movie Database API
 [The Movie Database (TMDB)](https://www.themoviedb.org/) es una base de datos en línea que contiene una amplia gama de información sobre películas y programas de televisión. Ofrece detalles como el elenco, equipo de producción, fechas de estreno, sinopsis, clasificaciones, puntuaciones de usuarios y críticos, imágenes, tráilers, posters y entre otros. En la plataforma, los usuarios pueden contribuir agregando información, corrigiendo errores o añadiendo contenido nuevo. Esto permite que la base de datos se mantenga actualizada y precisa gracias a la participación de la comunidad de usuarios. Adicionalmente, los usuarios pueden calificar películas y programas de televisión, lo que ayuda a generar puntuaciones que reflejan la opinión general de la comunidad sobre un título en particular.
